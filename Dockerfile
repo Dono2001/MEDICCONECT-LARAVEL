@@ -20,6 +20,11 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Copiar los archivos del proyecto
 COPY . .
 
+# Configurar el document root de Apache
+ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+
 # Instalar dependencias de Composer
 RUN composer install --optimize-autoloader --no-dev
 
