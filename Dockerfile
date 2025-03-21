@@ -4,7 +4,7 @@ FROM php:8.2-apache
 # Establecer el directorio de trabajo
 WORKDIR /var/www/html
 
-# Instalar dependencias del sistema y extensiones PHP
+# Instalar dependencias del sistema
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -12,8 +12,10 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
-    libpq-dev && \  # Dependencia necesaria para PostgreSQL
-    docker-php-ext-install pdo pdo_pgsql zip mbstring exif pcntl bcmath gd
+    libpq-dev 
+
+# Instalar extensiones de PHP necesarias para Laravel y PostgreSQL
+RUN docker-php-ext-install pdo pdo_pgsql zip mbstring exif pcntl bcmath gd
 
 # Instalar Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -37,7 +39,7 @@ RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-# Habilitar módulos de Apache si es necesario
+# Habilitar módulos de Apache necesarios
 RUN a2enmod rewrite
 
 # Exponer el puerto 80
