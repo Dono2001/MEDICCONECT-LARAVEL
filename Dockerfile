@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
-    libpq-dev 
+    libpq-dev
 
 # Instalar extensiones de PHP necesarias para Laravel y PostgreSQL
 RUN docker-php-ext-install pdo pdo_pgsql zip mbstring exif pcntl bcmath gd
@@ -31,9 +31,9 @@ RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 # Instalar dependencias de Composer (sin incluir las dependencias de desarrollo)
 RUN composer install --optimize-autoloader --no-dev
 
-# Configurar permisos para Laravel
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
-RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+# Ajustar permisos en el directorio storage y bootstrap/cache
+RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache && \
+    chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Copiar el script de entrypoint
 COPY entrypoint.sh /entrypoint.sh
