@@ -32,6 +32,10 @@ RUN composer install --optimize-autoloader --no-dev
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
+# Ejecutar migraciones y seeders
+RUN php artisan migrate --force
+RUN php artisan db:seed --force
+
 # Exponer el puerto 80
 EXPOSE 80
 
