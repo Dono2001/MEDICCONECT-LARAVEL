@@ -1,5 +1,10 @@
 #!/bin/sh
 
+# Ajustar permisos en el directorio storage y bootstrap/cache
+echo "Ajustando permisos en el directorio storage y bootstrap/cache..."
+chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+
 # Ejecutar migraciones
 php artisan migrate --force
 
